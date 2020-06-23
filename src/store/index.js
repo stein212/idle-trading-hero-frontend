@@ -1,11 +1,33 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
+
+import moduleAuth from './moduleAuth';
+import moduleUser from './moduleUser';
+import moduleStrategy from './moduleStrategy';
 
 export default new Vuex.Store({
-    state: {},
-    mutations: {},
+    state: {
+        userInfo: {
+            id: null,
+            firstName: null,
+            lastName: null,
+            roles: [],
+        },
+    },
+    mutations: {
+        setUserInfo(state, userInfo) {
+            state.userInfo.id = userInfo.id;
+            state.userInfo.firstName = userInfo.firstName;
+            state.userInfo.lastName = userInfo.lastName;
+            state.userInfo.roles = userInfo.roles;
+        },
+    },
     actions: {},
-    modules: {},
-})
+    modules: {
+        moduleAuth,
+        moduleUser,
+        moduleStrategy,
+    },
+});
