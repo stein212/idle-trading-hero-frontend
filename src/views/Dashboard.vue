@@ -1,6 +1,7 @@
 <template>
     <layout>
         <h1>Dashboard</h1>
+        <router-link :to="{ name: 'Strategies' }">Strategies</router-link>
     </layout>
 </template>
 

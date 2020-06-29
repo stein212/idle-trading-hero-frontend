@@ -1,0 +1,13 @@
+FROM node:lts-alpine as dev
+WORKDIR /app
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
+COPY . .
+# https://docs.microsoft.com/en-us/azure/app-service/containers/configure-custom-container#enable-ssh
+RUN apk add openssh \
+    && echo "root:Docker!" | chpasswd 
+COPY azure_sshd_config /etc/ssh/ssh_config
+RUN chmod +x run-azure-dev.sh
+EXPOSE 8080 2222
+ENTRYPOINT [ "./run-azure-dev.sh" ]

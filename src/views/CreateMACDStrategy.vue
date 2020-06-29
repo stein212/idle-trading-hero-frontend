@@ -2,7 +2,13 @@
     <layout>
         <h1>Create MACD Strategy</h1>
 
-        <form @submit.prevent="onMACDFormSubmit">
+        <form @submit.prevent="onMacdFormSubmit">
+            <b-field label="Name">
+                <b-input v-model="macdConfig.name"></b-input>
+            </b-field>
+            <b-field label="Instrument">
+                <b-input v-model="macdConfig.instrument"></b-input>
+            </b-field>
             <b-field label="Ema26">
                 <b-input type="number" v-model.number="macdConfig.ema26">
                 </b-input>
@@ -15,8 +21,13 @@
                 <b-input type="number" v-model.number="macdConfig.ema9">
                 </b-input>
             </b-field>
+
+            <button class="button is-fullwidth" type="button">
+                Backtest
+            </button>
+
             <button class="button is-fullwidth is-success" type="submit">
-                Get Performance
+                Create
             </button>
         </form>
 
@@ -55,9 +66,9 @@ export default {
     data() {
         return {
             macdConfig: {
-                asset: 'AAPL',
-                strategy: 'MACD',
-                capital: 10000,
+                name: '',
+                instrument: 'AUD_USD',
+                granularity: 'S5',
                 ema26: 26,
                 ema12: 12,
                 ema9: 9,
@@ -66,12 +77,26 @@ export default {
         };
     },
     methods: {
-        onMACDFormSubmit() {
-            this.getMACDPerformance(this.macdConfig).then(({ data }) => {
+        onMacdFormSubmit() {
+            const createMacdConfig = {
+                name: this.macdConfig.name,
+                instrument: this.macdConfig.instrument,
+                granularity: this.macdConfig.granularity,
+                ema26: this.macdConfig.ema26,
+                ema12: this.macdConfig.ema12,
+                ema9: this.macdConfig.ema9,
+            };
+            console.log(createMacdConfig);
+            this.createMacdStrategy(createMacdConfig).then(() => {
+                this.$router.push({ name: 'Strategies' });
+            });
+        },
+        onBacktestClick() {
+            this.getMacdBacktest(this.macdConfig).then(({ data }) => {
                 this.performance = data;
             });
         },
-        ...mapActions(['getMACDPerformance']),
+        ...mapActions(['createMacdStrategy', 'getMacdBacktest']),
     },
 };
 </script>

@@ -34,9 +34,28 @@ const routes = [
         meta: { requiresAuth: ['user'] },
     },
     {
+        path: '/strategies',
+        name: 'Strategies',
+        component: () => import('../views/Strategies.vue'),
+        props: true,
+        meta: { requiresAuth: ['user'] },
+    },
+    {
+        path: '/strategies/createStrategy',
+        name: 'CreateStrategy',
+        component: () => import('../views/CreateStrategy.vue'),
+        meta: { requiresAuth: ['user'] },
+    },
+    {
         path: '/strategies/createMACDStrategy',
         name: 'CreateMACDStrategy',
-        component: () => import('../views/CreateMACDStrategy.vue'),
+        component: () => import('../views/CreateMacdStrategy.vue'),
+        meta: { requiresAuth: ['user'] },
+    },
+    {
+        path: '/strategies/macd/:id',
+        name: 'ViewMacdStrategy',
+        component: () => import('../views/ViewMacdStrategy.vue'),
         meta: { requiresAuth: ['user'] },
     },
 ];
