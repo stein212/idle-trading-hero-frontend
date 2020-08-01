@@ -4,8 +4,11 @@ import BACKEND_URL from './base';
 
 export default {
     actions: {
-        loginAsync(_, credentials) {
+        login(_, credentials) {
             return axios.post(`${BACKEND_URL}/loginc`, credentials);
+        },
+        register(_, registerData) {
+            return axios.post(`${BACKEND_URL}/register`, registerData);
         },
     },
 };

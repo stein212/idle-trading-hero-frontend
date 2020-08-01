@@ -1,21 +1,27 @@
 <template>
     <layout>
-        <h1>Strategies</h1>
-        <p>TODO list of strategies user has</p>
+        <div class="container">
+            <p class="title">Strategies</p>
+            <div class="columns">
+                <div class="column"></div>
+                <div class="column is-narrow">
+                    <router-link
+                        class="button is-success is-pulled-right"
+                        :to="{ name: 'CreateStrategy' }"
+                        >Create Strategy</router-link
+                    >
+                </div>
+            </div>
 
-        <router-link
-            v-for="strategy in strategies"
-            :key="strategy.id"
-            class="box"
-            :to="{ path: `/strategies/${strategy.type}/${strategy.id}` }"
-        >
-            <p>{{ strategy.id }}</p>
-            <p>{{ strategy.name }}</p>
-        </router-link>
-
-        <router-link class="button" :to="{ name: 'CreateStrategy' }"
-            >Create Strategy</router-link
-        >
+            <router-link
+                v-for="strategy in strategies"
+                :key="strategy.id"
+                class="box"
+                :to="{ path: `/strategies/${strategy.type}/${strategy.id}` }"
+            >
+                <p>{{ strategy.name }} ({{ strategy.type }})</p>
+            </router-link>
+        </div>
     </layout>
 </template>
 

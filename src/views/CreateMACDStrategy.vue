@@ -1,56 +1,77 @@
 <template>
     <layout>
-        <h1>Create MACD Strategy</h1>
+        <div class="container">
+            <p class="title">Create MACD Strategy</p>
 
-        <form @submit.prevent="onMacdFormSubmit">
-            <b-field label="Name">
-                <b-input v-model="macdConfig.name"></b-input>
-            </b-field>
-            <b-field label="Instrument">
-                <b-input v-model="macdConfig.instrument"></b-input>
-            </b-field>
-            <b-field label="Ema26">
-                <b-input type="number" v-model.number="macdConfig.ema26">
-                </b-input>
-            </b-field>
-            <b-field label="Ema12">
-                <b-input type="number" v-model.number="macdConfig.ema12">
-                </b-input>
-            </b-field>
-            <b-field label="Ema9">
-                <b-input type="number" v-model.number="macdConfig.ema9">
-                </b-input>
-            </b-field>
+            <form @submit.prevent="onMacdFormSubmit">
+                <b-field label="Name">
+                    <b-input v-model="macdConfig.name"></b-input>
+                </b-field>
+                <b-field
+                    label="Instrument"
+                    content="The market the strategy will trade in"
+                    v-tippy="{ placement: 'bottom', arrow: true }"
+                >
+                    <b-select v-model="macdConfig.instrument" expanded>
+                        <option
+                            v-for="instrument of instruments"
+                            :key="instrument.value"
+                            :value="instrument.value"
+                            >{{ instrument.text }}</option
+                        >
+                    </b-select>
+                </b-field>
+                <b-field
+                    label="Ema26"
+                    content="Change the default 26 candles for Ema26"
+                    v-tippy="{ placement: 'bottom', arrow: true }"
+                >
+                    <b-input type="number" v-model.number="macdConfig.ema26">
+                    </b-input>
+                </b-field>
+                <b-field
+                    label="Ema12"
+                    content="Change the default 12 candles for Ema12"
+                    v-tippy="{ placement: 'bottom', arrow: true }"
+                >
+                    <b-input type="number" v-model.number="macdConfig.ema12">
+                    </b-input>
+                </b-field>
+                <b-field
+                    label="Ema9"
+                    content="Change the default 9 candles for Ema9"
+                    v-tippy="{ placement: 'bottom', arrow: true }"
+                >
+                    <b-input type="number" v-model.number="macdConfig.ema9">
+                    </b-input>
+                </b-field>
 
-            <button class="button is-fullwidth" type="button">
-                Backtest
-            </button>
+                <button class="button is-fullwidth is-success" type="submit">
+                    Create
+                </button>
+            </form>
 
-            <button class="button is-fullwidth is-success" type="submit">
-                Create
-            </button>
-        </form>
+            <br />
 
-        <br />
+            <div class="content" v-if="performance !== null">
+                <h3 class="title">Performance</h3>
 
-        <div class="content" v-if="performance !== null">
-            <h3 class="title">Performance</h3>
-
-            <p>Initial Capitial: {{ this.macdConfigcapitial }}</p>
-            <p>Final Capitial: {{ this.performance.balance }}</p>
-            <p>
-                Number Of Stock: {{ this.performance.stock }} (${{
-                    this.performance.c
-                }}/stock)
-            </p>
-            <p>Returns: {{ this.performance.return }}</p>
-            <p>
-                Total Equity:
-                {{
-                    this.performance.balance +
-                        this.performance.stock * this.performance.c
-                }}
-            </p>
+                <p>Initial Capitial: {{ this.macdConfigcapitial }}</p>
+                <p>Final Capitial: {{ this.performance.balance }}</p>
+                <p>
+                    Number Of Stock: {{ this.performance.stock }} (${{
+                        this.performance.c
+                    }}/stock)
+                </p>
+                <p>Returns: {{ this.performance.return }}</p>
+                <p>
+                    Total Equity:
+                    {{
+                        this.performance.balance +
+                            this.performance.stock * this.performance.c
+                    }}
+                </p>
+            </div>
         </div>
     </layout>
 </template>
@@ -97,6 +118,11 @@ export default {
             });
         },
         ...mapActions(['createMacdStrategy', 'getMacdBacktest']),
+    },
+    computed: {
+        instruments() {
+            return this.$store.state.moduleStrategy.instruments;
+        },
     },
 };
 </script>

@@ -12,6 +12,12 @@ const routes = [
         component: Home,
     },
     {
+        path: '/register',
+        name: 'Register',
+        component: () => import('../views/Register.vue'),
+        props: true,
+    },
+    {
         path: '/login',
         name: 'Login',
         component: () => import('../views/Login.vue'),
@@ -53,9 +59,33 @@ const routes = [
         meta: { requiresAuth: ['user'] },
     },
     {
+        path: '/strategies/createMFIStrategy',
+        name: 'CreateMFIStrategy',
+        component: () => import('../views/CreateMfiStrategy.vue'),
+        meta: { requiresAuth: ['user'] },
+    },
+    {
+        path: '/strategies/createRSIStrategy',
+        name: 'CreateRSIStrategy',
+        component: () => import('../views/CreateRsiStrategy.vue'),
+        meta: { requiresAuth: ['user'] },
+    },
+    {
         path: '/strategies/macd/:id',
         name: 'ViewMacdStrategy',
         component: () => import('../views/ViewMacdStrategy.vue'),
+        meta: { requiresAuth: ['user'] },
+    },
+    {
+        path: '/strategies/mfi/:id',
+        name: 'ViewMfiStrategy',
+        component: () => import('../views/ViewMfiStrategy.vue'),
+        meta: { requiresAuth: ['user'] },
+    },
+    {
+        path: '/strategies/rsi/:id',
+        name: 'ViewRsiStrategy',
+        component: () => import('../views/ViewRsiStrategy.vue'),
         meta: { requiresAuth: ['user'] },
     },
 ];

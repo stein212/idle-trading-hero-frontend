@@ -4,12 +4,13 @@
             <div class="column">
                 <div class="box">
                     <p class="title">{{ name }}</p>
-                    <p class="subtitle">MACD</p>
+                    <p class="subtitle">MFI</p>
 
                     <p><strong>Instrument:</strong> {{ instrument }}</p>
-                    <p><strong>EMA26:</strong> {{ ema26 }}</p>
-                    <p><strong>EMA12:</strong> {{ ema12 }}</p>
-                    <p><strong>EMA9:</strong> {{ ema9 }}</p>
+                    <p>
+                        <strong>Overbought Level:</strong> {{ overboughtLevel }}
+                    </p>
+                    <p><strong>Oversold Level:</strong> {{ oversoldLevel }}</p>
 
                     <br />
                     <span
@@ -151,7 +152,7 @@ import strategyEventUtils from '../mixins/strategyEventUtils';
 import { mapActions } from 'vuex';
 
 export default {
-    name: 'ViewMacdStrategy',
+    name: 'ViewMfiStrategy',
     components: {
         Layout,
     },
@@ -163,10 +164,9 @@ export default {
             id: this.$route.params.id,
             name: '',
             instrument: '',
-            ema26: null,
-            ema12: null,
-            ema9: null,
-            strategyType: 'macd',
+            overboughtLevel: null,
+            oversoldLevel: null,
+            strategyType: 'mfi',
             status: 'notDeployed',
 
             capital: 0,
@@ -218,11 +218,7 @@ export default {
                     },
                     series: [
                         {
-                            name: 'trend_macd',
-                            data: [],
-                        },
-                        {
-                            name: 'trend_macd_signal',
+                            name: 'volume_mfi',
                             data: [],
                         },
                     ],
@@ -330,12 +326,11 @@ export default {
 
         loadStrategy() {
             this.isLoading = true;
-            this.getMacdStrategy({ strategyId: this.id }).then(({ data }) => {
+            this.getMfiStrategy({ strategyId: this.id }).then(({ data }) => {
                 this.name = data.name;
                 this.instrument = data.instrument.replace('_', '/');
-                this.ema26 = data.ema26;
-                this.ema12 = data.ema12;
-                this.ema9 = data.ema9;
+                this.overboughtLevel = data.overboughtLevel;
+                this.oversoldLevel = data.oversoldLevel;
                 this.status = data.status;
 
                 if (this.status === 'live') {
@@ -347,6 +342,7 @@ export default {
                 this.loadStrategyEventsPoll = setInterval(() => {
                     this.loadStrategyEvents(3);
                 }, 5000);
+
                 this.isLoading = false;
             });
         },
@@ -358,7 +354,7 @@ export default {
 
             return this.initialiseStrategy({
                 strategyId: this.id,
-                strategyType: 'macd',
+                strategyType: this.strategyType,
                 capital: this.capital,
             }).then(() => {
                 this.loadStrategy();
@@ -391,7 +387,6 @@ export default {
             }).then(() => {
                 clearInterval(this.loadDataPoll); // if clearInterval does not work
                 this.loadDataPoll === null;
-                this.status = 'paused';
             });
         },
 
@@ -459,6 +454,7 @@ export default {
                 this.indicatorChart.chart.appendData(seriesToAppend);
 
                 // performance
+                // debugger;
                 const performanceData = responses[2].data;
                 console.log(performanceData);
                 latestTimestamp = this.getLatestTimestamp(
@@ -493,14 +489,14 @@ export default {
             this.isLoading = true;
             this.deleteStrategy({
                 strategyId: this.id,
-                strategyType: 'macd',
+                strategyType: 'mfi',
             }).then(() => {
                 this.$router.push({ name: 'Strategies' });
             });
         },
 
         ...mapActions([
-            'getMacdStrategy',
+            'getMfiStrategy',
             'initialiseStrategy',
             'getStrategyData',
             'getStrategyIndicatorData',

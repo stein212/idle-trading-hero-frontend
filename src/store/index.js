@@ -6,6 +6,7 @@ Vue.use(Vuex);
 import moduleAuth from './moduleAuth';
 import moduleUser from './moduleUser';
 import moduleStrategy from './moduleStrategy';
+import moduleStrategyEvent from './moduleStrategyEvent';
 
 export default new Vuex.Store({
     state: {
@@ -29,5 +30,6 @@ export default new Vuex.Store({
         moduleAuth,
         moduleUser,
         moduleStrategy,
+        moduleStrategyEvent,
     },
 });

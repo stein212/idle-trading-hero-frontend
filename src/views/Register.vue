@@ -7,10 +7,22 @@
                         <h1 class="title has-text-centered">
                             Idle Trading Hero
                         </h1>
-                        <p class="subtitle has-text-centered">Login</p>
-                        <form @submit.prevent="onLoginClick" class="box">
+                        <p class="subtitle has-text-centered">Register</p>
+                        <form @submit.prevent="onRegisterClick" class="box">
                             <b-field label="Username">
                                 <b-input type="text" v-model="username">
+                                </b-input>
+                            </b-field>
+                            <b-field label="Email">
+                                <b-input type="email" v-model="email">
+                                </b-input>
+                            </b-field>
+                            <b-field label="First Name">
+                                <b-input type="text" v-model="firstName">
+                                </b-input>
+                            </b-field>
+                            <b-field label="Last Name">
+                                <b-input type="text" v-model="lastName">
                                 </b-input>
                             </b-field>
                             <b-field label="Password">
@@ -21,11 +33,25 @@
                                 >
                                 </b-input>
                             </b-field>
+                            <b-field
+                                label="Confirm Password"
+                                :type="{
+                                    'is-danger': password !== confirmPassword,
+                                }"
+                            >
+                                <b-input
+                                    type="password"
+                                    v-model="confirmPassword"
+                                    password-reveal
+                                >
+                                </b-input>
+                            </b-field>
                             <button
                                 class="button is-fullwidth is-success"
                                 type="submit"
+                                :disabled="!canRegister"
                             >
-                                Login
+                                Register
                             </button>
                         </form>
                     </div>
@@ -71,7 +97,11 @@ export default {
     data() {
         return {
             username: '',
+            email: '',
+            firstName: '',
+            lastName: '',
             password: '',
+            confirmPassword: '',
             isLoading: false,
             isErrorModalActive: false,
         };
@@ -82,34 +112,45 @@ export default {
         }
     },
     methods: {
-        async onLoginClick() {
+        async onRegisterClick() {
             this.isLoading = true;
             const credentials = {
                 username: this.username,
+                email: this.email,
+                firstName: this.firstName,
+                lastName: this.lastName,
                 password: this.password,
             };
 
             try {
-                await this.login(credentials);
+                await this.register(credentials);
+                this.$router.push({ name: 'Login' });
             } catch (err) {
-                alert('Invalid Credentials!');
-                console.log(err);
+                if (err.response.status === 422) {
+                    alert(err.response.data.Errors[0].Message);
+                    this.isLoading = false;
+                    return;
+                }
+                alert('Something has gone wrong');
                 this.isLoading = false;
                 return;
             }
-
-            try {
-                await this.updateUserInfoAsync();
-                this.$router.push({ name: 'Dashboard' });
-            } catch (err) {
-                alert('Unknown Error');
-                console.log(err);
-                this.isLoading = false;
-            }
         },
-        ...mapActions(['login', 'updateUserInfoAsync']),
+        ...mapActions(['register']),
         onErrorModalOk() {
             this.isErrorModalActive = false;
+        },
+    },
+    computed: {
+        canRegister() {
+            return (
+                this.username !== '' &&
+                this.email !== '' &&
+                this.firstName !== '' &&
+                this.lastName !== '' &&
+                this.password !== '' &&
+                this.password == this.confirmPassword
+            );
         },
     },
 };
